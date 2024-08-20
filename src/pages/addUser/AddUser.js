@@ -1,17 +1,19 @@
 import React, { useContext } from "react";
+import { useDispatch } from "react-redux";
 import { Input, Label, Button } from "../../components";
 import { UserContex } from "../../App";
 import { stringData } from "../../data";
+import { addUser } from "../../redux/reducer/UserList.reducer";
 
 const AddUser = () => {
-  const { personData, setPersonData, name, setName, age, setAge, id } =
-    useContext(UserContex);
+  const dispatcher = useDispatch();
+  const { name, setName, age, setAge, id, users } = useContext(UserContex);
 
   function handleAddUser() {
     const newData = { name, age, id };
-    const data = [...personData];
-    data.push(newData);
-    setPersonData(data);
+    if (users) {
+      dispatcher(addUser(newData));
+    }
   }
 
   return (

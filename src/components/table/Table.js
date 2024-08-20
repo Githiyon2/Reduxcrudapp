@@ -1,19 +1,22 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { Pencil, Trash } from "lucide-react";
+
 import Button from "../button/Button";
 import { UserContex } from "../../App";
 import { stringData } from "../../data";
+import { deleteUser } from "../../redux/reducer/UserList.reducer";
 
 const Table = () => {
   const navigate = useNavigate();
-  const { personData, setPersonData } = useContext(UserContex);
-  const data = [...personData];
+  const { users } = useContext(UserContex);
+  const dispatcher = useDispatch();
 
-  function handleDelete(i) {
-    let data = [...personData];
-    data = data.filter((d) => d.id !== i);
-    setPersonData(data);
+  function handleDelete(data) {
+    if (data) {
+      dispatcher(deleteUser(data));
+    }
   }
 
   function handleEdit(id) {
@@ -33,7 +36,7 @@ const Table = () => {
             </tr>
           </thead>
           <tbody>
-            {data?.map((user, i) => {
+            {users?.map((user, i) => {
               return (
                 <tr key={i}>
                   <td className="border border-zinc-400  p-3">{i + 1}</td>
@@ -57,7 +60,7 @@ const Table = () => {
                       icon={<Trash />}
                       btnName={stringData.deleteBtn}
                       handleClick={() => {
-                        handleDelete(user.id);
+                        handleDelete(user);
                       }}
                     />
                   </td>
@@ -66,7 +69,13 @@ const Table = () => {
             })}
           </tbody>
         </table>
-        <Button className="bg-green-500 w-3/5" btnName={stringData.createBtn} handleClick={()=>{navigate('/addUser')}} />
+        <Button
+          className="bg-green-500 w-3/5"
+          btnName={stringData.createBtn}
+          handleClick={() => {
+            navigate("/addUser");
+          }}
+        />
       </div>
     </>
   );

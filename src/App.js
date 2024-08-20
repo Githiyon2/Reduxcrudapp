@@ -1,30 +1,26 @@
-import "./App.css";
-import { useState, useEffect } from "react";
-import { createContext } from "react";
+import { useState, useEffect, createContext } from "react";
 import { Route, Routes, useParams } from "react-router-dom";
-import { Home, AddUser, EditUser } from "./pages";
+import { useSelector } from "react-redux";
+
+import "./App.css";
 import { Navbar } from "./components";
-import { UserData } from "./data";
+import Routers from "./components/route/Routers";
 
 export const UserContex = createContext();
 
 function App() {
-  const [personData, setPersonData] = useState([...UserData]);
+  const { fetching = false, users = [] } = useSelector(
+    (state) => state.usersList
+  );
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [id, setUserId] = useState(0);
   const param = useParams();
 
   useEffect(() => {
-    const ids = personData.length + 1;
+    const ids = users.length + 1;
     setUserId(ids);
-  }, [personData]);
-
-  // function handleEdit(i){
-  //   let data = [...personData];
-  //   let newData =
-
-  // }
+  }, [users]);
 
   return (
     <>
@@ -32,8 +28,7 @@ function App() {
         <Navbar />
         <UserContex.Provider
           value={{
-            personData,
-            setPersonData,
+            users,
             name,
             setName,
             age,
@@ -43,9 +38,12 @@ function App() {
           }}
         >
           <Routes>
-            <Route path={"/"} element={<Home />} />
-            <Route path={"/addUser"} element={<AddUser />} />
-            <Route path={"/editUser/:id"} element={<EditUser />} />
+            {
+              Routers.map((rout)=>{
+                return   <Route path={rout.path} element={rout.element} />
+              })
+            }
+          
           </Routes>
         </UserContex.Provider>
       </div>

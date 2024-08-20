@@ -6,7 +6,7 @@ const Button = ({ className, icon, handleClick, type, btnName }) => {
       <button
         className={`${className} flex items-center justify-center gap-1 text-white capitalize text-lg rounded-md px-4 py-2`}
         type={type}
-        onClick={handleClick}
+        onClick={()=>handleClick()}
       >
         {icon}
         {btnName}

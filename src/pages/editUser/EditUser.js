@@ -1,16 +1,19 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { Label, Input, Button } from "../../components";
 import { UserContex } from "../../App";
 import { stringData } from "../../data";
+import { editUser } from "../../redux/reducer/UserList.reducer";
 
 const EditUser = () => {
   const params = useParams();
   const navigate = useNavigate();
-  const { personData, setPersonData } = useContext(UserContex);
-  const [name, setName] = useState(personData[params.id - 1].name);
-  const [age, setAge] = useState(personData[params.id - 1].age);
+  const { users } = useContext(UserContex);
+  const [name, setName] = useState(users[params.id - 1].name);
+  const [age, setAge] = useState(users[params.id - 1].age);
   const [id, setId] = useState("");
+  const dispatcher = useDispatch();
 
   useEffect(() => {
     let newId = params.id;
@@ -19,9 +22,7 @@ const EditUser = () => {
 
   function handleSubmit() {
     let newData = { name, age, id };
-    let data = [...personData];
-    data.splice(params.id - 1, 1, newData);
-    setPersonData(data);
+    dispatcher(editUser(newData));
     navigate("/");
   }
   return (
